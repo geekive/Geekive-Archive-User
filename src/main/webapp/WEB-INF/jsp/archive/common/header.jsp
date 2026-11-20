@@ -17,9 +17,10 @@
 	<!-- logo :: e -->
 	
 	<!-- search :: s -->
+	<c:url var="archiveSearchUrl" value="/${currentArchiveName}"/>
 	<div class="search-wrapper d-flex jce aic">
 		<div id="input-text-wrapper" class="input-text-wrapper d-flex jcc aic">
-			<form id="form-search" method="get">
+			<form id="form-search" method="get" action="<c:out value='${archiveSearchUrl}'/>">
 				<input type="text" class="form-control" name="searchValue" placeholder="<spring:message code="archvie.search"/>" maxlength="30" autocomplete="off">
 			</form>
 		</div>
@@ -36,7 +37,7 @@
 		});
 		$inputTextWrapper.on('dblclick', () => {
 			$inputTextWrapper.removeClass('on');
-			$('input[name="searchValue"]').val('');
+			$('#form-search input[name="searchValue"]').val('');
 		});
 	</script>
 	<!-- search :: e -->
