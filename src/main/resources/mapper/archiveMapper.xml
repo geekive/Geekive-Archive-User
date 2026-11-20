@@ -158,6 +158,7 @@
 
 	<select id="selectArticleList" resultType="geekiveMap">
 		/* archiveMapper.selectArticleList */
+		WITH PAGE_ARTICLE AS (
 		SELECT
 			RSLT2.*
 		FROM
@@ -225,12 +226,27 @@
 		ORDER BY
 			PAGING_INDEX ASC	
 		LIMIT #{dataCountPerPage}
+		)
+		SELECT
+			P.*
+			, COALESCE(V.VIEW_COUNT, 0) AS viewCount
+		FROM
+			PAGE_ARTICLE P
+			LEFT JOIN (
+				SELECT L.ARTICLE_UID, COUNT(*) AS VIEW_COUNT
+				FROM LOG_ARTICLE_VIEW L
+				JOIN PAGE_ARTICLE PA ON PA.articleUid = L.ARTICLE_UID
+				GROUP BY L.ARTICLE_UID
+			) V ON V.ARTICLE_UID = P.articleUid
+		ORDER BY
+			P.PAGING_INDEX ASC
 	</select>
 	
 	<select id="selectArticle" resultType="geekiveMap">
 		/* archiveMapper.selectArticle */
 		SELECT
 			RSLT.*
+			, (SELECT COUNT(*) FROM LOG_ARTICLE_VIEW L WHERE L.ARTICLE_UID = RSLT.ARTICLE_UID) AS viewCount
 		FROM
 			(
 			SELECT

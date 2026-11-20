@@ -25,12 +25,13 @@ public class HomeController {
 	JwtUtil jwtUtil;
 
 	@GetMapping(value = {"", "/index", "/home"})
-	public String index(ModelMap modelMap) throws Exception{
+	public String index(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception{
+		response.setHeader("Cache-Control", "no-store");
 		List<GeekiveMap> newArticleList 	= null;
 		List<GeekiveMap> randomArchiveList 	= null;
 		
 		try {
-			newArticleList 		= homeService.selectNewArticle();
+			newArticleList 		= homeService.selectNewArticle(Util.getSignedInUserUid(request));
 			randomArchiveList 	= homeService.selectRandomArchive();
 		} catch (Exception e) {
 			e.getStackTrace();

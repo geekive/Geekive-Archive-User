@@ -11,13 +11,21 @@
 				<img src="${newArticleList[0].thumbnailUrlPath}" onerror="getErrorImageUrl(this, 'thumbnail')">
 				<div class="content-wrapper">
 					<div class="title">
-						${newArticleList[0].title}
+						<c:if test="${newArticleList[0].flagPrivate eq 'Y'}">
+							<span class="badge bg-dark text-white me-1">Private</span>
+						</c:if>
+						<c:out value="${newArticleList[0].title}"/>
 					</div>
 					<div class="content">
 						${newArticleList[0].content}
 					</div>
 					<div class="date d-flex aic">
 						${newArticleList[0].archiveLogo}<font class="middot">&middot;</font>${newArticleList[0].registrationDate}
+						<c:if test="${not empty newArticleList}">
+							<fmt:formatNumber value="${newArticleList[0].viewCount}" var="viewCount"/>
+							<font class="middot">&middot;</font>
+							<span class="text-nowrap"><spring:message code="archive.article.views" arguments="${viewCount}" argumentSeparator="|"/></span>
+						</c:if>
 					</div>
 				</div>
 			</div>
@@ -26,10 +34,16 @@
 					<img src="${newArticle.thumbnailUrlPath}" onerror="getErrorImageUrl(this, 'thumbnail')">
 					<div class="content-wrapper">
 						<div class="title">
-							${newArticle.title}
+							<c:if test="${newArticle.flagPrivate eq 'Y'}">
+								<span class="badge bg-dark text-white me-1">Private</span>
+							</c:if>
+							<c:out value="${newArticle.title}"/>
 						</div>
 						<div class="date d-flex">
 							${newArticle.archiveLogo}<font class="middot">&middot;</font>${newArticle.registrationDate}
+							<fmt:formatNumber value="${newArticle.viewCount}" var="viewCount"/>
+							<font class="middot">&middot;</font>
+							<span class="text-nowrap"><spring:message code="archive.article.views" arguments="${viewCount}" argumentSeparator="|"/></span>
 						</div>
 					</div>
 				</div>

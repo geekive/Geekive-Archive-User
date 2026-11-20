@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.geekive.geekiveArchiveUser.geekiveCustom.GeekiveMap;
-import com.geekive.geekiveArchiveUser.mapper.ArchiveMapper;
 import com.geekive.geekiveArchiveUser.mapper.HomeMapper;
 
 
@@ -17,8 +16,8 @@ public class HomeService implements HomeMapper{
 	HomeMapper homeMapper;
 
 	@Override
-	public List<GeekiveMap> selectNewArticle() {
-		return homeMapper.selectNewArticle();
+	public List<GeekiveMap> selectNewArticle(String viewerUserUid) {
+		return homeMapper.selectNewArticle(viewerUserUid);
 	}
 
 	@Override

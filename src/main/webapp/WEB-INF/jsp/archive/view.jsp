@@ -12,7 +12,11 @@
 				</div>
 				<div class="article-view-info-wrapper d-flex jcb aic">
 					<div>${articleMap.registrationDate}</div>
-					<div><i id="btn-share" class="bi bi-clipboard" role="button"></i></div>
+					<div class="d-flex aic gap-3">
+						<fmt:formatNumber value="${articleMap.viewCount}" var="viewCount"/>
+						<span class="text-nowrap"><spring:message code="archive.article.views" arguments="${viewCount}" argumentSeparator="|"/></span>
+						<i id="btn-share" class="bi bi-clipboard" role="button"></i>
+					</div>
 				</div>
 			</div>
 			<div class="article-body-wrapper">

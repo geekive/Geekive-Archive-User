@@ -30,7 +30,12 @@
 					${article.content}
 				</div>
 				<div class="date d-flex aic">
-					${article.categoryName}<font class="middot">&middot;</font>${article.registrationDate}
+					<span class="text-truncate" title="<c:out value='${article.categoryName}'/>"><c:out value="${article.categoryName}"/></span>
+					<font class="middot">&middot;</font>
+					<span class="flex-shrink-0">${article.registrationDate}</span>
+					<fmt:formatNumber value="${article.viewCount}" var="viewCount"/>
+					<font class="middot">&middot;</font>
+					<span class="flex-shrink-0"><spring:message code="archive.article.views" arguments="${viewCount}" argumentSeparator="|"/></span>
 				</div>
 			</div>
 		</div>

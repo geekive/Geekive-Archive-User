@@ -4,16 +4,19 @@
 <mapper namespace="com.geekive.geekiveArchiveUser.mapper.HomeMapper">
 	<select id="selectNewArticle" resultType="geekiveMap">
 		/* homeMapper.selectNewArticle */
+		WITH RECENT_ARTICLE AS (
 		SELECT
 			RSLT.ARTICLE_UID 																AS articleUid
 			, GET_ARCHIVE_LOGO(RSLT.USER_UID)												AS archiveLogo
 			, RSLT.TITLE 																	AS title
+			, RSLT.FLAG_PRIVATE																AS flagPrivate
 			<![CDATA[
 			, REGEXP_REPLACE(REGEXP_REPLACE(RSLT.CONTENT, '<[^>]+>', ''), '&nbsp;', '')		AS content
 			]]>
 			, RSLT.URL_PATH 																AS thumbnailUrlPath
 			, GET_ARTICLE_URL(RSLT.ARTICLE_UID, RSLT.NUM) 									AS articleUrlPath
 			, DATE_FORMAT(RSLT.REGISTRATION_DATE, '%Y. %m. %d')								AS registrationDate
+			, RSLT.REGISTRATION_DATE														AS sortDate
 		FROM 
 			(
 			SELECT
@@ -23,6 +26,7 @@
 			  	) AS NUM
 				, A.ARTICLE_UID
 				, A.USER_UID
+				, A.REGISTRATION_USER
 				, A.TITLE
 				, A.CONTENT
 			   	, F.URL_PATH		
@@ -39,10 +43,32 @@
 		WHERE
 			RSLT.FLAG_DELETED 		= 'N'
 			AND RSLT.FLAG_ACTIVATED = 'Y'
-			AND COALESCE(RSLT.FLAG_PRIVATE, 'N') = 'N'
+			AND (
+				COALESCE(RSLT.FLAG_PRIVATE, 'N') = 'N'
+				<if test="viewerUserUid != null and viewerUserUid != ''">
+					OR RSLT.REGISTRATION_USER = #{viewerUserUid,jdbcType=VARCHAR}
+					OR <include refid="com.geekive.geekiveArchiveUser.mapper.ArchiveMapper.hasArticleViewer">
+						<property name="articleRef" value="RSLT"/>
+					</include>
+				</if>
+			)
 		ORDER BY
 			RSLT.REGISTRATION_DATE DESC
 		LIMIT 5
+		)
+		SELECT
+			R.*
+			, COALESCE(V.VIEW_COUNT, 0) AS viewCount
+		FROM
+			RECENT_ARTICLE R
+			LEFT JOIN (
+				SELECT L.ARTICLE_UID, COUNT(*) AS VIEW_COUNT
+				FROM LOG_ARTICLE_VIEW L
+				JOIN RECENT_ARTICLE RA ON RA.articleUid = L.ARTICLE_UID
+				GROUP BY L.ARTICLE_UID
+			) V ON V.ARTICLE_UID = R.articleUid
+		ORDER BY
+			R.sortDate DESC
 	</select>
 	
 	<select id="selectRandomArchive" resultType="geekiveMap">
