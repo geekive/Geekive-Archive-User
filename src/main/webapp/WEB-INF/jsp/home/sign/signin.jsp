@@ -22,9 +22,9 @@
 			</div>
 			
 			<div class="field-wrapper">
-				<div class="forgot-password">
+				<a class="forgot-password" href="<c:url value='/sign/forgot-password'/>">
 					<spring:message code="home.signin.forgot"/>
-				</div>
+				</a>
 				<div class="not-registered" onclick="goToPage('<c:url value="/sign/signup"/>')">
 					<spring:message code="home.signin.registered"/>
 				</div>

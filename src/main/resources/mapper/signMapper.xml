@@ -98,4 +98,16 @@
 			EMAIL 				= #{email}
 			AND FLAG_DELETED 	= 'N'
 	</select>
+	<update id="updateResetPassword" parameterType="geekiveMap">
+		/* signMapper.updateResetPassword */
+		UPDATE USER
+		SET
+			`PASSWORD` = #{newPassword}
+			, UPDATE_DATE = NOW()
+			, UPDATE_USER = #{userUid}
+		WHERE
+			USER_UID = #{userUid}
+			AND BINARY `PASSWORD` = #{password}
+			AND FLAG_DELETED = 'N'
+	</update>
 </mapper>

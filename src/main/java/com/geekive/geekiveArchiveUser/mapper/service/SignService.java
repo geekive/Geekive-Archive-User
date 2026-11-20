@@ -83,4 +83,16 @@ public class SignService implements SignMapper{
 	public void insertCategory(GeekiveMap gMap) {
 		signMapper.insertCategory(gMap);
 	}
+
+	public GeekiveMap selectPasswordResetUser(String email) throws Exception {
+		GeekiveMap gMap = new GeekiveMap();
+		gMap.put("email", cryptoUtil.encryptData(email));
+		return signMapper.selectUser(gMap);
+	}
+
+	@Override
+	public int updateResetPassword(GeekiveMap gMap) {
+		gMap.put("newPassword", cryptoUtil.encryptPassword(gMap.getString("newPassword")));
+		return signMapper.updateResetPassword(gMap);
+	}
 }
