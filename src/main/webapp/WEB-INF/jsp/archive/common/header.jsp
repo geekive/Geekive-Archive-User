@@ -28,16 +28,24 @@
 	</div>
 	<script>
 		const $inputTextWrapper = $('.search-wrapper #input-text-wrapper');
+		const $searchForm = $('#form-search');
+		const $searchInput = $searchForm.find('input[name="searchValue"]');
+		$searchForm.on('submit', (event) => {
+			if(!$searchInput.val().trim()){
+				event.preventDefault();
+				window.location.assign($searchForm.attr('action'));
+			}
+		});
 		$('#btn-search').on('click', () => {
 			if($inputTextWrapper.hasClass('on')){
-				$('#form-search').submit();
+				$searchForm.submit();
 			}else{
 				$inputTextWrapper.addClass('on');
 			}
 		});
 		$inputTextWrapper.on('dblclick', () => {
 			$inputTextWrapper.removeClass('on');
-			$('#form-search input[name="searchValue"]').val('');
+			$searchInput.val('');
 		});
 	</script>
 	<!-- search :: e -->
