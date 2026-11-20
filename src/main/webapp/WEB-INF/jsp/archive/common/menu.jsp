@@ -49,7 +49,7 @@
 				<a href="#" onclick="goToPage('/');"><spring:message code="archive.menu.home"/></a>
 				<c:choose>
 					<c:when test="${isMyArchvie}">
-						<a href="#" onclick="goToPage('/admin', '_blank')"><spring:message code="archive.menu.admin"/></a>
+						<a href="#" onclick="goToPage('/sign/admin', '_blank')"><spring:message code="archive.menu.admin"/></a>
 					</c:when>
 					<c:otherwise>
 						<a href="#" onclick="goToPage('/${sessionScope.userMap.myArchiveUrlPath}')"><spring:message code="archive.menu.myarchive"/></a>
