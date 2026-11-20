@@ -5,7 +5,10 @@
 		<c:when test="${articleMap.flagDeleted eq 'N'}">
 			<div class="article-view-header-wrapper">
 				<div class="article-view-title-wrapper d-flex jcc aic">
-					${articleMap.title}
+					<c:if test="${articleMap.flagPrivate eq 'Y'}">
+						<span class="badge bg-dark text-white me-2 flex-shrink-0">Private</span>
+					</c:if>
+					<span><c:out value="${articleMap.title}"/></span>
 				</div>
 				<div class="article-view-info-wrapper d-flex jcb aic">
 					<div>${articleMap.registrationDate}</div>
