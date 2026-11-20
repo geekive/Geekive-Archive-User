@@ -19,9 +19,9 @@
 	<!-- search :: s -->
 	<c:url var="archiveSearchUrl" value="/${currentArchiveName}"/>
 	<div class="search-wrapper d-flex jce aic">
-		<div id="input-text-wrapper" class="input-text-wrapper d-flex jcc aic">
+		<div id="input-text-wrapper" class="input-text-wrapper d-flex jcc aic ${empty param.searchValue ? '' : 'on'}">
 			<form id="form-search" method="get" action="<c:out value='${archiveSearchUrl}'/>">
-				<input type="text" class="form-control" name="searchValue" placeholder="<spring:message code="archvie.search"/>" maxlength="30" autocomplete="off">
+				<input type="text" class="form-control" name="searchValue" value="<c:out value='${param.searchValue}'/>" placeholder="<spring:message code="archvie.search"/>" maxlength="30" autocomplete="off">
 			</form>
 		</div>
 		<i id="btn-search" class="bi-search" role="button"></i>
