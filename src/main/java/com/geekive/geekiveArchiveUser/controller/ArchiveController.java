@@ -33,6 +33,7 @@ public class ArchiveController {
 			currentCategoryUid 				= request.getAttribute("currentCategoryUid").toString();
 
 			GeekiveMap gMap = new GeekiveMap();
+			gMap.put("viewerUserUid", Util.getSignedInUserUid(request));
 			gMap.put("currentArchiveUserUid"	, currentArchiveUserUid);	
 			gMap.put("currentCategoryUid"		, currentCategoryUid);
 			gMap.put("searchValue"				, request.getParameter("searchValue"));
@@ -61,6 +62,7 @@ public class ArchiveController {
 		String currentArticleNumber 	= request.getAttribute("currentArticleNumber").toString();
 		try {
 			GeekiveMap gMap = new GeekiveMap();
+			gMap.put("viewerUserUid", Util.getSignedInUserUid(request));
 			gMap.put("currentArchiveUserUid"	, currentArchiveUserUid);	
 			gMap.put("currentCategoryUid"		, currentCategoryUid);
 			gMap.put("currentArticleNumber"		, currentArticleNumber);
@@ -83,6 +85,7 @@ public class ArchiveController {
 		int articleTotalCount		 	= 0;
 		try {
 			GeekiveMap gMap = new GeekiveMap();
+			gMap.put("viewerUserUid", Util.getSignedInUserUid(request));
 			gMap.put("currentArchiveUserUid"	, request.getParameter("currentArchiveUserUid"));	
 			gMap.put("currentCategoryUid"		, request.getParameter("currentCategoryUid"));
 			gMap.put("searchValue"				, request.getParameter("searchValue"));

@@ -2,7 +2,6 @@ package com.geekive.geekiveArchiveUser.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -31,7 +30,7 @@ public class CommonDataInterceptor implements HandlerInterceptor {
 		String currentArchiveLogo 	= "";
 		String categoryUid			= "";
 		String articleUid			= "";
-		Boolean isMyArchvie			= false;
+
 		
 		// get user uid or it's gonna send redirect
 		GeekiveMap gMap = new GeekiveMap();
@@ -44,15 +43,10 @@ public class CommonDataInterceptor implements HandlerInterceptor {
 		gMap.put("userUid", userUid);
 		currentArchiveLogo = archiveService.selectArchiveLogo(gMap);
 		
-		// check if the archive entering is mine
-		if(Util.isLogin(request)) {
-			HttpSession session = request.getSession();
-			GeekiveMap userMap 	= (GeekiveMap) session.getAttribute("userMap");
-			if(userMap.getString("userUid").equals(userUid)) {
-				isMyArchvie = true;
-			}
-		}
-		
+		String viewerUserUid = Util.getSignedInUserUid(request);
+		boolean isMyArchvie = userUid.equals(viewerUserUid);
+		gMap.put("viewerUserUid", viewerUserUid);
+
 		// get category uid or it's gonna send redirect
 		if(Util.isNotEmpty(categoryUrlPath)) {
 			gMap.put("categoryUrlPath"	, categoryUrlPath);
@@ -69,6 +63,7 @@ public class CommonDataInterceptor implements HandlerInterceptor {
 			gMap.put("categoryUid"	, categoryUid);
 			if(!archiveService.checkArticleExistence(gMap)) {
 				response.sendRedirect("/" + archiveName + "/" + categoryUrlPath);
+				return false;
 			}else {
 				articleUid = archiveService.selectArticleUid(gMap);
 			}

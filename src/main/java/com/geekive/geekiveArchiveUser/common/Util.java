@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.geekive.geekiveArchiveUser.geekiveCustom.GeekiveMap;
+
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -73,6 +75,15 @@ public class Util {
 		HttpSession httpSession = request.getSession();
 		Boolean isSignedIn 		= (Boolean) httpSession.getAttribute("isSignedIn");
 		return isSignedIn != null && isSignedIn;
+	}
+
+	public static String getSignedInUserUid(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session == null || !Boolean.TRUE.equals(session.getAttribute("isSignedIn"))) {
+			return null;
+		}
+		Object user = session.getAttribute("userMap");
+		return user instanceof GeekiveMap ? ((GeekiveMap) user).getString("userUid") : null;
 	}
 	
 	/**

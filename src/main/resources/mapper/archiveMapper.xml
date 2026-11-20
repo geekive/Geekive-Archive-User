@@ -39,6 +39,7 @@
 				SELECT 
 					ROW_NUMBER() OVER (ORDER BY REGISTRATION_DATE ASC) AS NUM
 					, FLAG_DELETED
+				, FLAG_PRIVATE
 				FROM 
 					ARTICLE
 				WHERE
@@ -47,6 +48,7 @@
 				) RSLT
 			WHERE
 			   RSLT.NUM = #{articleNumber}
+			   AND (COALESCE(RSLT.FLAG_PRIVATE, 'N') = 'N' OR #{userUid} = #{viewerUserUid,jdbcType=VARCHAR})
 		) AS FLAG_EXISTENCE
 	</select>
 	
@@ -64,6 +66,7 @@
 			SELECT
     			ROW_NUMBER() OVER (PARTITION BY CATEGORY_UID ORDER BY REGISTRATION_DATE ASC) 	AS NUM
 				, ARTICLE_UID
+				, FLAG_PRIVATE
 			FROM
     			ARTICLE
 			WHERE
@@ -72,6 +75,7 @@
 			) RSLT
 		WHERE
 			RSLT.NUM = #{articleNumber}
+			AND (COALESCE(RSLT.FLAG_PRIVATE, 'N') = 'N' OR #{userUid} = #{viewerUserUid,jdbcType=VARCHAR})
 	</select>
 	
 	<select id="selectArticleListCount" resultType="Integer">
@@ -109,6 +113,7 @@
 				    , A.REGISTRATION_DATE
 					, A.FLAG_DELETED
 					, A.FLAG_ACTIVATED
+				, A.FLAG_PRIVATE
 				FROM 
 					ARTICLE A
 					LEFT JOIN `FILE` F
@@ -128,6 +133,7 @@
 			WHERE
 			    RSLT1.FLAG_DELETED 			= 'N'
 			    AND RSLT1.FLAG_ACTIVATED 	= 'Y'
+			    AND (COALESCE(RSLT1.FLAG_PRIVATE, 'N') = 'N' OR RSLT1.REGISTRATION_USER = #{viewerUserUid,jdbcType=VARCHAR})
 				<if test="searchValue != null and searchValue != ''">
 					AND RSLT1.TITLE LIKE CONCAT('%', #{searchValue}, '%')
 				</if>
@@ -171,6 +177,7 @@
 				    , A.REGISTRATION_DATE
 					, A.FLAG_DELETED
 					, A.FLAG_ACTIVATED
+				, A.FLAG_PRIVATE
 				FROM 
 					ARTICLE A
 					LEFT JOIN `FILE` F
@@ -190,6 +197,7 @@
 			WHERE
 			    RSLT1.FLAG_DELETED 			= 'N'
 			    AND RSLT1.FLAG_ACTIVATED 	= 'Y'
+			    AND (COALESCE(RSLT1.FLAG_PRIVATE, 'N') = 'N' OR RSLT1.REGISTRATION_USER = #{viewerUserUid,jdbcType=VARCHAR})
 				<if test="searchValue != null and searchValue != ''">
 					AND RSLT1.TITLE LIKE CONCAT('%', #{searchValue}, '%')
 				</if>
@@ -215,6 +223,7 @@
     			, CONTENT																		AS content
     			, DATE_FORMAT(REGISTRATION_DATE, '%Y. %m. %d') 									AS registrationDate
     			, FLAG_DELETED																	AS flagDeleted
+				, FLAG_PRIVATE
 			FROM
     			ARTICLE
 			WHERE
@@ -223,5 +232,6 @@
 			) RSLT
 		WHERE
 			RSLT.NUM = #{currentArticleNumber}
+			AND (COALESCE(RSLT.FLAG_PRIVATE, 'N') = 'N' OR #{currentArchiveUserUid} = #{viewerUserUid,jdbcType=VARCHAR})
 	</select>
 </mapper>
